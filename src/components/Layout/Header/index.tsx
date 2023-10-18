@@ -78,18 +78,25 @@ const Header: React.FC = () => {
               <Button
                 key={page.name}
                 href={page.href}
-                sx={{ my: 2, color: COLORS.FONT, display: 'block' }}
+                sx={{ my: 2, color: COLORS.FONT }}
               >
                 {page.name}
               </Button>
             ))}
             <Button
               onClick={() => handleGoToExternalLink(LINKS.WHITEPAPER)}
-              sx={{ my: 2, color: COLORS.FONT, display: 'block' }}
+              sx={{ my: 2, color: COLORS.FONT }}
             >
               Whitepaper
             </Button>
           </Box>
+          {/*
+          <Box sx={{ flexGrow: 0 }}>
+            <Button sx={{ color: "white" }}>
+              Wallet connect
+            </Button>
+          </Box>
+          */}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -112,7 +119,7 @@ const Header: React.FC = () => {
             }
           >
             <ListItem disablePadding>
-              <ListItemButton href="/mint-passport">
+              <ListItemButton href="/passport/mint">
                 <ListItemIcon sx={{ color: COLORS.ICON }}>
                   <AirplaneTicketIcon />
                 </ListItemIcon>

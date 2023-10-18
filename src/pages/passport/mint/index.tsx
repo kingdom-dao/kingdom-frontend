@@ -4,11 +4,11 @@ import type { ReactElement } from 'react'
 import Header from '@/components/Layout/Header'
 
 import type { NextPageWithLayout } from '@/pages/_app'
-import HomeView from '@/views/Home'
+import PassportMintView from '@/views/Passport/Mint'
 
-const Home: NextPageWithLayout = () => <HomeView />
+const PassportMint: NextPageWithLayout = () => <PassportMintView />
 
-Home.getLayout = function getLayout(page: ReactElement) {
+PassportMint.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
       <Header />
@@ -19,4 +19,4 @@ Home.getLayout = function getLayout(page: ReactElement) {
   )
 }
 
-export default Home
+export default PassportMint
