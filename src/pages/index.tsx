@@ -18,7 +18,7 @@ Home.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
       <Header />
-      <Box sx={{ mx: 10 }}>{page}</Box>
+      <Box sx={{ mx: 10, backgroundColor: '#fffffc' }}>{page}</Box>
     </>
   )
 }
