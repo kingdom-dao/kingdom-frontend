@@ -1,8 +1,14 @@
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import AirplaneTicketIcon from '@mui/icons-material/AirplaneTicket'
+import ExpandLess from '@mui/icons-material/ExpandLess'
+import ExpandMore from '@mui/icons-material/ExpandMore'
+import FlightIcon from '@mui/icons-material/Flight'
 import MenuIcon from '@mui/icons-material/Menu'
+import SavingsIcon from '@mui/icons-material/Savings'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Collapse from '@mui/material/Collapse'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
@@ -16,6 +22,11 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
 import { APP_NAME, LINKS } from '@/config/constants'
+
+enum ListItemName {
+  Passport = 'passport',
+  Kt = 'kt',
+}
 
 const COLORS = {
   BACKGROUND: '#2e2930',
@@ -39,6 +50,18 @@ const Header: React.FC = () => {
 
   const toggleDrawer = () => {
     setDrawer(!drawer)
+  }
+
+  const [openPassportListItem, setOpenPassportListItem] =
+    useState<boolean>(false)
+  const [openKtListItem, setOpenKtListItem] = useState<boolean>(false)
+
+  const toggleListItemOpenState = (listName: ListItemName) => {
+    if (listName === ListItemName.Passport) {
+      setOpenPassportListItem(!openPassportListItem)
+    } else if (listName === ListItemName.Kt) {
+      setOpenKtListItem(!openKtListItem)
+    }
   }
 
   return (
@@ -118,28 +141,50 @@ const Header: React.FC = () => {
               </ListSubheader>
             }
           >
-            <ListItem disablePadding>
-              <ListItemButton href="/passport/mint">
-                <ListItemIcon sx={{ color: COLORS.ICON }}>
-                  <AirplaneTicketIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Mint Passport"
-                  sx={{ color: COLORS.FONT }}
-                />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton href="/kt/staking">
-                <ListItemIcon sx={{ color: COLORS.ICON }}>
-                  <AirplaneTicketIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="$KT Staking"
-                  sx={{ color: COLORS.FONT }}
-                />
-              </ListItemButton>
-            </ListItem>
+            <ListItemButton
+              onClick={() => toggleListItemOpenState(ListItemName.Passport)}
+            >
+              <ListItemIcon sx={{ color: COLORS.ICON }}>
+                <FlightIcon />
+              </ListItemIcon>
+              <ListItemText primary="PASSPORT" sx={{ color: COLORS.FONT }} />
+              {openPassportListItem ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={openPassportListItem} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem disablePadding>
+                  <ListItemButton href="/passport/mint" sx={{ pl: 4 }}>
+                    <ListItemIcon sx={{ color: COLORS.ICON }}>
+                      <AirplaneTicketIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Mint" sx={{ color: COLORS.FONT }} />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Collapse>
+
+            <ListItemButton
+              onClick={() => toggleListItemOpenState(ListItemName.Kt)}
+            >
+              <ListItemIcon sx={{ color: COLORS.ICON }}>
+                <AccountBalanceIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="KINGDOM Token"
+                sx={{ color: COLORS.FONT }}
+              />
+              {openKtListItem ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={openKtListItem} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton href="/kt/staking" sx={{ pl: 4 }}>
+                  <ListItemIcon sx={{ color: COLORS.ICON }}>
+                    <SavingsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Staking" sx={{ color: COLORS.FONT }} />
+                </ListItemButton>
+              </List>
+            </Collapse>
           </List>
         </Box>
       </Drawer>
