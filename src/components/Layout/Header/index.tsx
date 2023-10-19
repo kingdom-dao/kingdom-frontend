@@ -129,6 +129,17 @@ const Header: React.FC = () => {
                 />
               </ListItemButton>
             </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton href="/kt/staking">
+                <ListItemIcon sx={{ color: COLORS.ICON }}>
+                  <AirplaneTicketIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="$KT Staking"
+                  sx={{ color: COLORS.FONT }}
+                />
+              </ListItemButton>
+            </ListItem>
           </List>
         </Box>
       </Drawer>
