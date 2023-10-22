@@ -14,8 +14,8 @@ import { useRouter } from 'next/router'
 import { DefaultSeo } from 'next-seo'
 import type { ReactElement, ReactNode } from 'react'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
-import { mainnet, sepolia, bsc } from 'wagmi/chains'
-import { publicProvider } from 'wagmi/providers/public'
+import { mainnet, sepolia } from 'wagmi/chains'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
 
 import { PageMeta } from '@/components/Layout/Page'
 
@@ -49,8 +49,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   })
 
   const { chains, publicClient } = configureChains(
-    [mainnet, sepolia, bsc],
-    [publicProvider()]
+    [mainnet, sepolia],
+    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string })]
   )
 
   // https://cloud.walletconnect.com/

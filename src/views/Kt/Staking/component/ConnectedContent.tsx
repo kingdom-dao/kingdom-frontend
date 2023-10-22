@@ -13,20 +13,26 @@ import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number
-) {
-  return { name, calories, fat, carbs }
-}
+import ContractKtBalanceOf from '@/components/Contract/Kt/BalanceOf'
 
-const rows = [createData('Pool name', 159, 6.0, 24)]
+const depositRows: {
+  poolName: string
+  unlockData: string
+  amountStaked: number
+  claimableReward: number
+}[] = []
+const vestedRows: {
+  vestedReward: number
+  vestingStart: string
+  vestingEnds: number
+}[] = []
 
 const ConnectedContent = () => {
   return (
     <>
+      <Grid xs={12}>
+        <ContractKtBalanceOf />
+      </Grid>
       <Grid xs={4}>
         <Card>
           <CardContent>
@@ -124,17 +130,17 @@ const ConnectedContent = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {depositRows.map((row) => (
                 <TableRow
-                  key={row.name}
+                  key={row.poolName}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {row.name}
+                    {row.poolName}
                   </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.carbs}</TableCell>
+                  <TableCell align="right">{row.unlockData}</TableCell>
+                  <TableCell align="right">{row.amountStaked}</TableCell>
+                  <TableCell align="right">{row.claimableReward}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -159,24 +165,22 @@ const ConnectedContent = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Pool name</TableCell>
-                <TableCell align="right">Unlock Date</TableCell>
-                <TableCell align="right">Amount staked</TableCell>
-                <TableCell align="right"> Claimable reward</TableCell>
+                <TableCell>Vested reward</TableCell>
+                <TableCell align="right"> Vesting start</TableCell>
+                <TableCell align="right">Vesting ends</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {vestedRows.map((row) => (
                 <TableRow
-                  key={row.name}
+                  key={row.vestedReward}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {row.name}
+                    {row.vestedReward}
                   </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.carbs}</TableCell>
+                  <TableCell align="right">{row.vestingStart}</TableCell>
+                  <TableCell align="right">{row.vestingEnds}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
