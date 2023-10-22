@@ -21,6 +21,8 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
+import ConnectWalletButton from '@/components/Button/ConnectWalletButton'
+
 import { APP_NAME, LINKS } from '@/config/constants'
 
 enum ListItemName {
@@ -113,13 +115,9 @@ const Header: React.FC = () => {
               Whitepaper
             </Button>
           </Box>
-          {/*
           <Box sx={{ flexGrow: 0 }}>
-            <Button sx={{ color: "white" }}>
-              Wallet connect
-            </Button>
+            <ConnectWalletButton />
           </Box>
-          */}
         </Toolbar>
       </AppBar>
       <Drawer
