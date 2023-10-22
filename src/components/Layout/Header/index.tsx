@@ -30,7 +30,7 @@ enum ListItemName {
   Kt = 'kt',
 }
 
-const COLORS = {
+export const COLORS = {
   BACKGROUND: '#2e2930',
   FONT: '#ffffff',
   ICON: '#cacbcd',
