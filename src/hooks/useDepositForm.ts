@@ -26,7 +26,6 @@ const useDepositForm = () => {
   console.log('watchedInput: ', watchedInput)
 
   const onSubmit = (data: DepositFormSchema) => {
-    // zodの値変換+型チェックを通過した値
     console.log('data', data)
   }
 
