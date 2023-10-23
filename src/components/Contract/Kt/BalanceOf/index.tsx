@@ -45,7 +45,10 @@ const ContractKtBalanceOf = () => {
   useEffect(() => {
     let formattedBalance = '0'
     const bigintBalance = data as bigint
-    if (bigintBalance.toString() !== '0') {
+    if (bigintBalance === undefined) {
+      // Cases of concern for networks
+      formattedBalance = '0'
+    } else if (bigintBalance.toString() !== '0') {
       formattedBalance = formatUnits(bigintBalance, 18)
     }
     setBalance(formattedBalance)

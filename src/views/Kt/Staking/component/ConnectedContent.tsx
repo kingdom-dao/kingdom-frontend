@@ -14,6 +14,9 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import ContractKtBalanceOf from '@/components/Contract/Kt/BalanceOf'
+import DepositDialog from '@/components/Dialog/DepositDialog'
+
+import { useDialog } from '@/hooks/useDialog'
 
 const depositRows: {
   poolName: string
@@ -28,6 +31,12 @@ const vestedRows: {
 }[] = []
 
 const ConnectedContent = () => {
+  const {
+    isOpen: depositDialog,
+    openDialog: openDepositDialog,
+    closeDialog: closeDepositDialog,
+  } = useDialog()
+
   return (
     <>
       <Grid xs={12}>
@@ -51,7 +60,10 @@ const ConnectedContent = () => {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button>Stake</Button>
+            {/* Deposit dialog */}
+            <Button onClick={openDepositDialog}>Deposit</Button>
+            <DepositDialog open={depositDialog} onClose={closeDepositDialog} />
+            {/* Unlock */}
             <Button>Unlock</Button>
           </CardActions>
         </Card>
