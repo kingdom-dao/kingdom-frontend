@@ -146,7 +146,11 @@ const Header: React.FC = () => {
                 <FlightIcon />
               </ListItemIcon>
               <ListItemText primary="PASSPORT" sx={{ color: COLORS.FONT }} />
-              {openPassportListItem ? <ExpandLess /> : <ExpandMore />}
+              {openPassportListItem ? (
+                <ExpandLess sx={{ color: COLORS.ICON }} />
+              ) : (
+                <ExpandMore sx={{ color: COLORS.ICON }} />
+              )}
             </ListItemButton>
             <Collapse in={openPassportListItem} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
@@ -171,7 +175,11 @@ const Header: React.FC = () => {
                 primary="KINGDOM Token"
                 sx={{ color: COLORS.FONT }}
               />
-              {openKtListItem ? <ExpandLess /> : <ExpandMore />}
+              {openKtListItem ? (
+                <ExpandLess sx={{ color: COLORS.ICON }} />
+              ) : (
+                <ExpandMore sx={{ color: COLORS.ICON }} />
+              )}
             </ListItemButton>
             <Collapse in={openKtListItem} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
