@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useState } from 'react'
 
+import BalanceOf from '@/components/Contract/Kt/BalanceOf'
+
 import { TOKEN_ERC20 } from '@/config/constants'
 
 export interface DepositDialogProps {
@@ -50,53 +52,63 @@ const DepositDialog = (props: DepositDialogProps) => {
             >
               Lock for {weeks} weeks
             </Typography>
-            <Typography variant="body2" component="p">
-              Staking end date: 23.04.23
-            </Typography>
-            <Typography variant="body2" component="p">
-              Weight 2.00
-            </Typography>
+            <Box display="flex" justifyContent="space-between">
+              <Typography variant="body2" component="div">
+                Staking end date: 23.04.23
+              </Typography>
+              <Typography variant="body2" component="div">
+                Weight 2.00
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid xs={12}>
+            <Box sx={{ mt: 4, mb: 4 }}>
+              <Slider
+                defaultValue={MIN_WEEKS}
+                value={weeks}
+                max={MAX_WEEKS}
+                min={MIN_WEEKS}
+                onChange={handleChange}
+                getAriaValueText={valuetext}
+                valueLabelDisplay="on"
+              />
+            </Box>
+          </Grid>
+          <Grid xs={12}>
+            <Box display="flex" justifyContent="space-between">
+              <Typography variant="body2" component="div">
+                Balance: <BalanceOf />
+              </Typography>
+              <Typography variant="body2" component="div">
+                Est. APR. 149%
+              </Typography>
+            </Box>
+            <Box sx={{ mt: 2 }}>
+              <TextField
+                id="lock-amount-input"
+                label="Lock amount"
+                variant="outlined"
+                fullWidth
+              />
+            </Box>
+          </Grid>
+          <Grid xs={12}>
+            <Box sx={{ mt: 2, mb: 2 }}>
+              <Typography variant="body2">
+                Rewards claiming period: 1 day
+              </Typography>
+              <Typography variant="body2">
+                Rewards vesting period: 12 months
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="body2">
+                Be aware of the risks associated with staking contracts. You
+                assume all the responsibility.
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
-        <Box sx={{ mt: 6 }}>
-          <Slider
-            defaultValue={MIN_WEEKS}
-            value={weeks}
-            max={MAX_WEEKS}
-            min={MIN_WEEKS}
-            onChange={handleChange}
-            getAriaValueText={valuetext}
-            valueLabelDisplay="on"
-          />
-        </Box>
-        <Box>
-          <Typography variant="body2">Balance: 108.22122</Typography>
-        </Box>
-        <Box sx={{ mt: 2 }}>
-          <TextField
-            id="lock-amount-input"
-            label="Lock amount"
-            variant="outlined"
-            fullWidth
-          />
-        </Box>
-        <Box>
-          <Typography variant="body2">Est. APR. 149%</Typography>
-        </Box>
-        <Box>
-          <Typography variant="body2">
-            Rewards claiming period: 1 day
-          </Typography>
-          <Typography variant="body2">
-            Rewards vesting period: 12 months
-          </Typography>
-        </Box>
-        <Box>
-          <Typography variant="body2">
-            Be aware of the risks associated with staking contracts. You assume
-            all the responsibility.
-          </Typography>
-        </Box>
       </DialogContent>
       <DialogActions>
         <Button>Enable</Button>
