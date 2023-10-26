@@ -10,9 +10,10 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useState } from 'react'
 
-import BalanceOf from '@/components/Contract/Kt/BalanceOf'
+//import BalanceOf from '@/components/Contract/Kt/BalanceOf'
 
 import { TOKEN_ERC20 } from '@/config/constants'
+import useBalanceOf from '@/hooks/contract/useBalanceOf'
 
 export interface DepositDialogProps {
   open: boolean
@@ -30,6 +31,8 @@ const DepositDialog = (props: DepositDialogProps) => {
   const { onClose, open } = props
 
   const [weeks, setWeeks] = useState<number>(0)
+
+  const { balance } = useBalanceOf()
 
   const handleClose = () => {
     onClose()
@@ -64,10 +67,11 @@ const DepositDialog = (props: DepositDialogProps) => {
           <Grid xs={12}>
             <Box sx={{ mt: 4, mb: 4 }}>
               <Slider
-                defaultValue={MIN_WEEKS}
-                value={weeks}
+                id="lock-weeks-input"
                 max={MAX_WEEKS}
                 min={MIN_WEEKS}
+                defaultValue={MIN_WEEKS}
+                value={weeks}
                 onChange={handleChange}
                 getAriaValueText={valuetext}
                 valueLabelDisplay="on"
@@ -77,7 +81,8 @@ const DepositDialog = (props: DepositDialogProps) => {
           <Grid xs={12}>
             <Box display="flex" justifyContent="space-between">
               <Typography variant="body2" component="div">
-                Balance: <BalanceOf />
+                Balance: {balance ? balance.toString() : '0'}{' '}
+                {TOKEN_ERC20.SYMBOL}
               </Typography>
               <Typography variant="body2" component="div">
                 Est. APR. 149%
@@ -88,16 +93,20 @@ const DepositDialog = (props: DepositDialogProps) => {
                 id="lock-amount-input"
                 label="Lock amount"
                 variant="outlined"
+                defaultValue={0}
                 fullWidth
+                InputProps={{
+                  endAdornment: 'KT',
+                }}
               />
             </Box>
           </Grid>
           <Grid xs={12}>
             <Box sx={{ mt: 2, mb: 2 }}>
-              <Typography variant="body2">
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                 Rewards claiming period: 1 day
               </Typography>
-              <Typography variant="body2">
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                 Rewards vesting period: 12 months
               </Typography>
             </Box>
@@ -111,8 +120,9 @@ const DepositDialog = (props: DepositDialogProps) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button>Enable</Button>
-        <Button>Stake</Button>
+        <Button variant="contained" disableElevation>
+          Stake
+        </Button>
       </DialogActions>
     </Dialog>
   )

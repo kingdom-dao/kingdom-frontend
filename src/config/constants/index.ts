@@ -13,4 +13,5 @@ export const LINKS = {
 export const TOKEN_ERC20 = {
   NAME: 'Kingdom Token',
   SYMBOL: 'KT',
+  DECIMALS: 18,
 }
