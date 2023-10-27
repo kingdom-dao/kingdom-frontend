@@ -13,7 +13,7 @@ import { useEffect } from 'react'
 import { Controller } from 'react-hook-form'
 
 import { STAKING_PERIOD, TOKEN_ERC20 } from '@/config/constants'
-import useBalanceOf from '@/hooks/contract/useBalanceOf'
+import useBalanceOf from '@/hooks/contract/kt/useBalanceOf'
 import useDepositForm from '@/hooks/useDepositForm'
 import { minUnitToToken } from '@/utils/token-conversion'
 
@@ -49,7 +49,8 @@ const DepositDialog = (props: DepositDialogProps) => {
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={handleClose}>
       <DialogTitle>{TOKEN_ERC20.NAME}</DialogTitle>
-      <Box component="form" onSubmit={() => handleSubmit(onSubmit)}>
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+      <Box component="form" onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Grid container spacing={2}>
             <Grid xs={12}>
