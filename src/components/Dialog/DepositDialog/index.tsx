@@ -9,22 +9,17 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useState } from 'react'
+import { useEffect } from 'react'
+import { Controller } from 'react-hook-form'
 
-//import BalanceOf from '@/components/Contract/Kt/BalanceOf'
-
-import { TOKEN_ERC20 } from '@/config/constants'
+import { STAKING_PERIOD, TOKEN_ERC20 } from '@/config/constants'
 import useBalanceOf from '@/hooks/contract/useBalanceOf'
+import useDepositForm from '@/hooks/useDepositForm'
+import { minUnitToToken } from '@/utils/token-conversion'
 
 export interface DepositDialogProps {
   open: boolean
   onClose: () => void
-}
-
-const MIN_WEEKS = 1
-const MAX_WEEKS = 52
-
-function valuetext(value: number) {
-  return `${value} weeks`
 }
 
 const DepositDialog = (props: DepositDialogProps) => {
@@ -32,98 +27,121 @@ const DepositDialog = (props: DepositDialogProps) => {
 
   const [weeks, setWeeks] = useState<number>(0)
 
-  const { balance } = useBalanceOf()
+  const { balanceWei, balance } = useBalanceOf()
+
+  const { control, handleSubmit, onSubmit, setValue, watchedInput } =
+    useDepositForm()
 
   const handleClose = () => {
     onClose()
   }
 
-  const handleChange = (event: Event, newValue: number | number[]) => {
-    setWeeks(newValue as number)
+  const setAmount = (percent: number) => {
+    if (!balanceWei) return
+    const amount = (balanceWei * BigInt(percent)) / BigInt(100)
+    setValue('amount', minUnitToToken(amount, TOKEN_ERC20.DECIMALS))
   }
+
+  useEffect(() => {
+    setWeeks(watchedInput.weeks || 1)
+  }, [watchedInput.weeks])
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={handleClose}>
       <DialogTitle>{TOKEN_ERC20.NAME}</DialogTitle>
-      <DialogContent>
-        <Grid container spacing={2}>
-          <Grid xs={12}>
-            <Typography
-              variant="subtitle1"
-              component="p"
-              sx={{ fontWeight: 'bold' }}
-            >
-              Lock for {weeks} weeks
-            </Typography>
-            <Box display="flex" justifyContent="space-between">
-              <Typography variant="body2" component="div">
-                Staking end date: 23.04.23
+      <Box component="form" onSubmit={() => handleSubmit(onSubmit)}>
+        <DialogContent>
+          <Grid container spacing={2}>
+            <Grid xs={12}>
+              <Typography
+                variant="subtitle1"
+                component="p"
+                sx={{ fontWeight: 'bold' }}
+              >
+                Lock for {weeks} weeks
               </Typography>
-              <Typography variant="body2" component="div">
-                Weight 2.00
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid xs={12}>
-            <Box sx={{ mt: 4, mb: 4 }}>
-              <Slider
-                id="lock-weeks-input"
-                max={MAX_WEEKS}
-                min={MIN_WEEKS}
-                defaultValue={MIN_WEEKS}
-                value={weeks}
-                onChange={handleChange}
-                getAriaValueText={valuetext}
-                valueLabelDisplay="on"
+            </Grid>
+            <Grid xs={12} sx={{ pt: 4, px: 2 }}>
+              <Controller
+                name="weeks"
+                control={control}
+                defaultValue={1}
+                render={({ field }) => (
+                  <Slider
+                    {...field}
+                    min={STAKING_PERIOD.MIN}
+                    max={STAKING_PERIOD.MAX}
+                    valueLabelDisplay="on"
+                  />
+                )}
               />
-            </Box>
-          </Grid>
-          <Grid xs={12}>
-            <Box display="flex" justifyContent="space-between">
-              <Typography variant="body2" component="div">
-                Balance: {balance ? balance.toString() : '0'}{' '}
-                {TOKEN_ERC20.SYMBOL}
-              </Typography>
-              <Typography variant="body2" component="div">
-                Est. APR. 149%
-              </Typography>
-            </Box>
-            <Box sx={{ mt: 2 }}>
-              <TextField
-                id="lock-amount-input"
-                label="Lock amount"
+            </Grid>
+            <Grid xs={12}>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="body2" component="div">
+                  Balance: {balance ? balance.toString() : '0'}{' '}
+                  {TOKEN_ERC20.SYMBOL}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid xs={12}>
+              <Controller
+                name="amount"
+                control={control}
+                defaultValue="0"
+                render={({ field, formState: { errors } }) => (
+                  <TextField
+                    {...field}
+                    label="Amount"
+                    autoComplete="off"
+                    fullWidth
+                    error={errors.amount ? true : false}
+                    helperText={errors.amount?.message as string}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid xs={12} textAlign="right">
+              <Button
                 variant="outlined"
-                defaultValue={0}
-                fullWidth
-                InputProps={{
-                  endAdornment: 'KT',
-                }}
-              />
-            </Box>
+                disableElevation
+                sx={{ mr: 0.5 }}
+                onClick={() => setAmount(25)}
+              >
+                25%
+              </Button>
+              <Button
+                variant="outlined"
+                disableElevation
+                sx={{ mr: 0.5 }}
+                onClick={() => setAmount(50)}
+              >
+                50%
+              </Button>
+              <Button
+                variant="outlined"
+                disableElevation
+                sx={{ mr: 0.5 }}
+                onClick={() => setAmount(75)}
+              >
+                75%
+              </Button>
+              <Button
+                variant="outlined"
+                disableElevation
+                onClick={() => setAmount(100)}
+              >
+                MAX
+              </Button>
+            </Grid>
           </Grid>
-          <Grid xs={12}>
-            <Box sx={{ mt: 2, mb: 2 }}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Rewards claiming period: 1 day
-              </Typography>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Rewards vesting period: 12 months
-              </Typography>
-            </Box>
-            <Box>
-              <Typography variant="body2">
-                Be aware of the risks associated with staking contracts. You
-                assume all the responsibility.
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="contained" disableElevation>
-          Stake
-        </Button>
-      </DialogActions>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" variant="contained" disableElevation>
+            Stake
+          </Button>
+        </DialogActions>
+      </Box>
     </Dialog>
   )
 }

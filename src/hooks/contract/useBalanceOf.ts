@@ -3,6 +3,7 @@ import { useAccount, useContractRead } from 'wagmi'
 
 import KingdomTokenAbi from '@/config/abis/KingdomTokenAbi.json'
 import { KT_TOKEN_ADDRESS, TOKEN_ERC20 } from '@/config/constants'
+import { minUnitToToken } from '@/utils/token-conversion'
 
 const useBalanceOf = () => {
   const [balance, setBalance] = useState<string>('0')
@@ -10,7 +11,12 @@ const useBalanceOf = () => {
 
   const { address } = useAccount()
 
-  const { data, refetch, isError, isLoading } = useContractRead({
+  const {
+    data: balanceWei,
+    refetch,
+    isError,
+    isLoading,
+  } = useContractRead({
     address: KT_TOKEN_ADDRESS,
     abi: KingdomTokenAbi,
     functionName: 'balanceOf',
@@ -18,12 +24,7 @@ const useBalanceOf = () => {
     enabled: enabled,
     watch: true,
     onSuccess(data: bigint) {
-      const divisor = BigInt('10'.padEnd(TOKEN_ERC20.DECIMALS + 1, '0'))
-      const formatted = (
-        (BigInt(data.toString()) * BigInt(10000)) /
-        divisor
-      ).toString()
-      return `${formatted.slice(0, -4)}.${formatted.slice(-4)}`
+      return minUnitToToken(data.toString(), TOKEN_ERC20.DECIMALS)
     },
     onError() {
       return BigInt(0)
@@ -33,17 +34,12 @@ const useBalanceOf = () => {
   useEffect(() => {
     let result = '0'
 
-    if (data) {
-      const divisor = BigInt('10'.padEnd(TOKEN_ERC20.DECIMALS + 1, '0'))
-      const formatted = (
-        (BigInt(data.toString()) * BigInt(10000)) /
-        divisor
-      ).toString()
-      result = `${formatted.slice(0, -4)}.${formatted.slice(-4)}`
+    if (balanceWei) {
+      result = minUnitToToken(balanceWei, TOKEN_ERC20.DECIMALS)
     }
 
     setBalance(result)
-  }, [data])
+  }, [balanceWei])
 
   useEffect(() => {
     setEnabled(Boolean(address))
@@ -57,6 +53,7 @@ const useBalanceOf = () => {
   }, [address])
 
   return {
+    balanceWei,
     balance,
     isError,
     isLoading,

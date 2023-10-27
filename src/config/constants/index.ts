@@ -15,3 +15,8 @@ export const TOKEN_ERC20 = {
   SYMBOL: 'KT',
   DECIMALS: 18,
 }
+
+export const STAKING_PERIOD = {
+  MIN: 1,
+  MAX: 52,
+}
