@@ -17,6 +17,11 @@ import { Controller } from 'react-hook-form'
 import { STAKING_PERIOD, TOKEN_ERC20 } from '@/config/constants'
 import useBalanceOf from '@/hooks/contract/kt/useBalanceOf'
 import useDepositForm from '@/hooks/useDepositForm'
+import {
+  calculateEndDateFromCurrentDate,
+  calculateStakingWeight,
+  calculateAPR,
+} from '@/utils/staking'
 import { minUnitToToken } from '@/utils/token-conversion'
 
 export interface DepositDialogProps {
@@ -27,7 +32,7 @@ export interface DepositDialogProps {
 const DepositDialog = (props: DepositDialogProps) => {
   const { onClose, open } = props
 
-  const [weeks, setWeeks] = useState<number>(0)
+  const [weeks, setWeeks] = useState<number>(2)
 
   const { balanceWei, balance } = useBalanceOf()
 
@@ -45,7 +50,7 @@ const DepositDialog = (props: DepositDialogProps) => {
   }
 
   useEffect(() => {
-    setWeeks(watchedInput.weeks || 1)
+    setWeeks(watchedInput.weeks || 2)
   }, [watchedInput.weeks])
 
   return (
@@ -55,7 +60,7 @@ const DepositDialog = (props: DepositDialogProps) => {
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
             <Grid container spacing={2}>
-              <Grid xs={12}>
+              <Grid xs={12} sx={{ pb: 2 }}>
                 <Typography
                   variant="subtitle1"
                   component="p"
@@ -63,6 +68,14 @@ const DepositDialog = (props: DepositDialogProps) => {
                 >
                   Lock for {weeks} weeks
                 </Typography>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="body2" component="p">
+                    Staking end date: {calculateEndDateFromCurrentDate(weeks)}
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    Weight: {calculateStakingWeight(weeks)}
+                  </Typography>
+                </Box>
               </Grid>
               <Grid xs={12} sx={{ pt: 4, px: 2 }}>
                 <Controller
@@ -81,9 +94,14 @@ const DepositDialog = (props: DepositDialogProps) => {
               </Grid>
               <Grid xs={12}>
                 <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body2" component="div">
+                  <Typography variant="body2" component="p">
                     Balance: {balance ? balance.toString() : '0'}{' '}
                     {TOKEN_ERC20.SYMBOL}
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    Est. APR:{' '}
+                    {calculateAPR(weeks, Number(calculateStakingWeight(weeks)))}
+                    %
                   </Typography>
                 </Box>
               </Grid>

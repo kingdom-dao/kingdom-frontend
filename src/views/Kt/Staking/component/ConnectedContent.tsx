@@ -64,7 +64,7 @@ const ConnectedContent = () => {
             <Button onClick={openDepositDialog}>Deposit</Button>
             <DepositDialog open={depositDialog} onClose={closeDepositDialog} />
             {/* Unlock */}
-            <Button>Unlock</Button>
+            <Button disabled>Unlock</Button>
           </CardActions>
         </Card>
       </Grid>

@@ -17,6 +17,11 @@ export const TOKEN_ERC20 = {
 }
 
 export const STAKING_PERIOD = {
-  MIN: 1,
+  MIN: 2,
   MAX: 52,
+}
+
+export const STAKING_WEIGHT = {
+  MIN: 1.0,
+  MAX: 2.0,
 }
