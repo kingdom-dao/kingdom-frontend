@@ -4,20 +4,22 @@ import KingdomTokenAbi from '@/config/abis/KingdomTokenAbi.json'
 import { KT_TOKEN_ADDRESS } from '@/config/constants'
 
 const useApprove = () => {
-  const { writeAsync } = useContractWrite({
+  const { writeAsync, isLoading, isSuccess } = useContractWrite({
     address: KT_TOKEN_ADDRESS,
     abi: KingdomTokenAbi,
     functionName: 'approve',
     onSuccess(data) {
-      console.log('onSuccess: ', data)
+      console.info('approve: onSuccess: ', `hash=${data.hash}`)
     },
     onError(data) {
-      console.log('onError: ', data)
+      console.info('approve: onError: ', data)
     },
   })
 
   return {
     writeAsync,
+    isLoading,
+    isSuccess,
   }
 }
 
