@@ -14,9 +14,9 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import ContractKtBalanceOf from '@/components/Contract/Kt/BalanceOf'
-import DepositDialog from '@/components/Dialog/DepositDialog'
 
 import { useDialog } from '@/hooks/useDialog'
+import DepositDialog from '@/views/Kt/Staking/component/DepositDeialog'
 
 const depositRows: {
   poolName: string

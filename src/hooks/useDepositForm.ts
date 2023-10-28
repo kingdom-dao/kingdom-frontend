@@ -9,7 +9,6 @@ import {
   STAKING_CONTRACT_ADDRESS,
   TOKEN_ERC20,
 } from '@/config/constants'
-// import useAllowance from '@/hooks/contract/kt/useAllowance'
 import useApprove from '@/hooks/contract/kt/useApprove'
 import useDeposit from '@/hooks/contract/staking/useDeposit'
 import { tokenToMinUnit } from '@/utils/token-conversion'
@@ -31,6 +30,7 @@ const useDepositForm = () => {
     weeks: 1,
     amount: '0',
   })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { control, handleSubmit, setValue } = useForm<DepositFormSchema>({
     resolver: zodResolver(depositFormSchema),
@@ -43,6 +43,7 @@ const useDepositForm = () => {
   const watchedInput = useWatch({ control })
 
   const onSubmit = async (data: DepositFormSchema) => {
+    setIsLoading(true)
     const amount = tokenToMinUnit(data.amount, TOKEN_ERC20.DECIMALS)
     const res = await approveAsync({
       args: [STAKING_CONTRACT_ADDRESS, amount.toString()],
@@ -56,20 +57,27 @@ const useDepositForm = () => {
 
   useEffect(() => {
     if (!hash) return
-    void (async () => {
-      setEnabled(true)
-      await refetch()
-    })()
+    setEnabled(true)
+    void refetch().catch((err) => {
+      console.error(err)
+      setIsLoading(false)
+    })
   }, [hash])
 
   useEffect(() => {
     if (!txRecipt) return
-    void (async () => {
-      console.info('approve: tx recipt: ', txRecipt)
-      await depositAsync({
-        args: [KT_TOKEN_ADDRESS, args.weeks, args.amount.toString()],
+    console.info('approve: tx recipt: ', txRecipt)
+    void depositAsync({
+      args: [KT_TOKEN_ADDRESS, args.weeks, args.amount.toString()],
+    })
+      .then((res) => {
+        console.info('deposit: hash=', res.hash)
+        setIsLoading(false)
       })
-    })()
+      .catch((err) => {
+        console.error(err)
+        setIsLoading(false)
+      })
   }, [txRecipt])
 
   return {
@@ -78,6 +86,7 @@ const useDepositForm = () => {
     onSubmit,
     watchedInput,
     setValue,
+    isLoading,
   }
 }
 
